@@ -2,55 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Advanced Hello GUI</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello GUI - Advanced</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
-        body { padding: 30px; }
-        .greeting { margin-top: 15px; font-size: 1.5em; color: #0066cc; }
+        body {
+            background: linear-gradient(to right, #e0f7fa, #ffffff);
+            padding-top: 60px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .greeting {
+            margin-top: 10px;
+            font-size: 1.4rem;
+            color: #007bff;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .list-group-item {
+            background-color: #fafafa;
+            border: 1px solid #eee;
+        }
+
+        .form-icon {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2 class="text-center">🚀 Hello, Interactive User!</h2>
-        
-        <form method="POST" oninput="liveGreet()">
-            <div class="mb-3">
-                <label>Name:</label>
-                <input type="text" name="name" id="name" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label>Age:</label>
-                <input type="number" name="age" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label>Your Message:</label>
-                <textarea name="message" class="form-control" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
 
-        <div class="greeting" id="greetArea"></div>
+<div class="container">
+    <div class="row justify-content-center">
 
-        <hr>
-        <h4>📜 Last 5 Submissions</h4>
-        <ul class="list-group">
-            {% for user in users %}
-                <li class="list-group-item">
-                    <strong>{{ user[0] }}</strong> ({{ user[1] }} years): {{ user[2] }}
-                </li>
-            {% endfor %}
-        </ul>
+        <!-- Form Card -->
+        <div class="col-md-7">
+            <div class="card p-4">
+                <h2 class="text-center mb-4">🚀 Say Hello to the World</h2>
+
+                <form method="POST" oninput="liveGreet()">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-person-fill form-icon"></i> Your Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-calendar2-week-fill form-icon"></i> Your Age</label>
+                        <input type="number" name="age" class="form-control" placeholder="Enter your age" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-chat-left-text-fill form-icon"></i> Your Message</label>
+                        <textarea name="message" class="form-control" placeholder="Say something nice..." rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-send-fill"></i> Submit
+                    </button>
+
+                    <div class="greeting text-center" id="greetArea"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Submission History Card -->
+        <div class="col-md-7 mt-5">
+            <div class="card p-4">
+                <h4 class="mb-3 text-center"><i class="bi bi-clock-history"></i> Recent Submissions</h4>
+                <ul class="list-group">
+                    {% for user in users %}
+                        <li class="list-group-item">
+                            <strong>{{ user[0] }}</strong> ({{ user[1] }} years) — {{ user[2] }}
+                        </li>
+                    {% else %}
+                        <li class="list-group-item text-muted">No submissions yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <script>
-        function liveGreet() {
-            let name = document.getElementById("name").value;
-            if (name.trim() !== "") {
-                document.getElementById("greetArea").innerText = "👋 Hello, " + name + "!";
-            } else {
-                document.getElementById("greetArea").innerText = "";
-            }
-        }
-    </script>
+<!-- JS for greeting -->
+<script>
+    function liveGreet() {
+        const name = document.getElementById("name").value.trim();
+        const greetArea = document.getElementById("greetArea");
+        greetArea.textContent = name ? "👋 Hello, " + name + "!" : "";
+    }
+</script>
+
 </body>
 </html>
