@@ -38,18 +38,19 @@
         }
         .form-control::placeholder {
             font-style: italic;
+            color: #aaa;
         }
         .form-floating > .form-control {
             padding-left: 2.5rem;
         }
         .form-icon {
-        position: absolute;
-        top: 50%;
-        left: 15px;
-        transform: translateY(-50%);
-        color: #999;
-        font-size: 1.1rem;
-        pointer-events: none;
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 1.1rem;
+            pointer-events: none;
         }
         .position-relative {
             position: relative;
@@ -59,6 +60,25 @@
             top: 1rem;
             right: 1rem;
             z-index: 1055;
+        }
+        .input-group-text {
+            background-color: #e9ecef;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-primary {
+            font-weight: 600;
+        }
+        .list-group-item strong {
+            color: #0d6efd;
+        }
+        .animated-icon {
+            animation: floatIcon 2s infinite ease-in-out;
+        }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </head>
@@ -76,7 +96,7 @@
         <!-- Form Card -->
         <div class="col-md-7">
             <div class="card p-4">
-                <h2 class="text-center mb-4">🚀 Say Hello in Style</h2>
+                <h2 class="text-center mb-4"><i class="bi bi-stars animated-icon"></i> Say Hello in Style</h2>
 
                 <!-- Form -->
                 <form method="POST" onsubmit="showToast()" oninput="liveGreet()">
@@ -86,19 +106,19 @@
                             <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
                             <input type="text" class="form-control" name="name" id="name" placeholder="Enter your name" required>
                         </div>
-                        </div>
+                    </div>
 
-                        <!-- AGE FIELD -->
-                        <div class="form-group mb-3">
+                    <!-- AGE FIELD -->
+                    <div class="form-group mb-3">
                         <label for="age" class="form-label">Your Age</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-calendar-week"></i></span>
                             <input type="number" class="form-control" name="age" id="age" placeholder="Enter your age" required>
                         </div>
-                        </div>
+                    </div>
 
-                        <!-- MESSAGE FIELD -->
-                        <div class="form-group mb-3">
+                    <!-- MESSAGE FIELD -->
+                    <div class="form-group mb-3">
                         <label for="message" class="form-label">Your Message</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-chat-dots-fill"></i></span>
@@ -121,13 +141,18 @@
             <div class="card p-4">
                 <h4 class="text-center"><i class="bi bi-clock-history"></i> Recent Submissions</h4>
                 <ul class="list-group mt-3">
-                    {% for user in users %}
-                        <li class="list-group-item">
-                            <strong>{{ user[0] }}</strong> ({{ user[1] }} yrs): {{ user[2] }}
-                        </li>
-                    {% else %}
-                        <li class="list-group-item text-muted">No submissions yet.</li>
-                    {% endfor %}
+                    <li class="list-group-item">
+                        <strong>Subh Kumar</strong> (24 yrs): I am a great Scientist in all Universes...
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Niraj Kumar</strong> (54545454454 yrs): I'm a great Scientist in this universes
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Niraj Kumar</strong> (54545454454 yrs): I'm Niex_45
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Vinay Kumar Ram</strong> (45000 yrs): I'm only one son of my father
+                    </li>
                 </ul>
             </div>
         </div>
@@ -167,7 +192,7 @@
         setTimeout(() => {
             const toast = new bootstrap.Toast(document.getElementById('submitToast'));
             toast.show();
-        }, 200); // slight delay to allow redirect
+        }, 200);
     }
 
     function toggleTheme() {
