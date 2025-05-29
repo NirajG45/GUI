@@ -8,14 +8,37 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom CSS for styling -->
+    <!-- Custom CSS -->
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             padding-top: 60px;
-            background: linear-gradient(to right, #f0f4f8, #ffffff);
-            transition: background 0.5s ease;
+            background: linear-gradient(-45deg, #e3f2fd, #ffffff, #e1f5fe, #f0f4f8);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
         }
+        @keyframes gradientShift {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .cloud {
+            background: url('https://i.ibb.co/F8n5GJY/cloud.png') no-repeat;
+            width: 200px;
+            height: 100px;
+            background-size: contain;
+            position: absolute;
+            animation: floatClouds 60s linear infinite;
+            opacity: 0.4;
+        }
+        @keyframes floatClouds {
+            from {left: -250px;}
+            to {left: 100%;}
+        }
+        .cloud:nth-child(1) {top: 50px; animation-delay: 0s;}
+        .cloud:nth-child(2) {top: 150px; animation-delay: 15s;}
+        .cloud:nth-child(3) {top: 250px; animation-delay: 30s;}
         .card {
             border: none;
             border-radius: 15px;
@@ -32,13 +55,22 @@
             width: 0;
             animation: typing 3s steps(30, end) forwards;
         }
+        .greeting::after {
+            content: '|';
+            animation: blink 0.7s infinite;
+            color: #007bff;
+            margin-left: 5px;
+        }
         @keyframes typing {
             from { width: 0 }
             to { width: 100% }
         }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
         .form-control::placeholder {
             font-style: italic;
-            color: #aaa;
         }
         .form-floating > .form-control {
             padding-left: 2.5rem;
@@ -52,8 +84,10 @@
             font-size: 1.1rem;
             pointer-events: none;
         }
-        .position-relative {
-            position: relative;
+        .submission-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border-radius: 10px;
         }
         .toast-container {
             position: fixed;
@@ -61,34 +95,35 @@
             right: 1rem;
             z-index: 1055;
         }
-        .input-group-text {
-            background-color: #e9ecef;
+        .clock-date {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #555;
         }
-        .form-label {
-            font-weight: 500;
-        }
-        .btn-primary {
-            font-weight: 600;
-        }
-        .list-group-item strong {
-            color: #0d6efd;
-        }
-        .animated-icon {
-            animation: floatIcon 2s infinite ease-in-out;
-        }
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        .clock {
+            font-weight: bold;
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
 
+<div class="cloud"></div>
+<div class="cloud"></div>
+<div class="cloud"></div>
+
 <div class="container">
+    <!-- Clock & Date -->
+    <div class="clock-date">
+        <div class="date" id="currentDate"></div>
+        <div class="clock" id="currentTime"></div>
+    </div>
+
     <!-- Dark Mode Toggle -->
     <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-outline-secondary btn-sm" onclick="toggleTheme()">
-            <i class="bi bi-moon-stars-fill me-1"></i> Toggle Dark Mode
+        <button class="btn btn-outline-secondary btn-sm theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
+            <i class="bi bi-moon-stars-fill me-1" id="themeIcon"></i> Toggle Dark Mode
         </button>
     </div>
 
@@ -96,7 +131,7 @@
         <!-- Form Card -->
         <div class="col-md-7">
             <div class="card p-4">
-                <h2 class="text-center mb-4"><i class="bi bi-stars animated-icon"></i> Say Hello in Style</h2>
+                <h2 class="text-center mb-4">🚀 Say Hello in Style</h2>
 
                 <!-- Form -->
                 <form method="POST" onsubmit="showToast()" oninput="liveGreet()">
@@ -108,7 +143,6 @@
                         </div>
                     </div>
 
-                    <!-- AGE FIELD -->
                     <div class="form-group mb-3">
                         <label for="age" class="form-label">Your Age</label>
                         <div class="input-group">
@@ -117,7 +151,6 @@
                         </div>
                     </div>
 
-                    <!-- MESSAGE FIELD -->
                     <div class="form-group mb-3">
                         <label for="message" class="form-label">Your Message</label>
                         <div class="input-group">
@@ -130,7 +163,6 @@
                         <i class="bi bi-send-fill"></i> Submit
                     </button>
 
-                    <!-- Animated Greeting -->
                     <div id="greetArea" class="greeting text-center mt-3"></div>
                 </form>
             </div>
@@ -140,19 +172,11 @@
         <div class="col-md-7 mt-5">
             <div class="card p-4">
                 <h4 class="text-center"><i class="bi bi-clock-history"></i> Recent Submissions</h4>
-                <ul class="list-group mt-3">
-                    <li class="list-group-item">
-                        <strong>Subh Kumar</strong> (24 yrs): I am a great Scientist in all Universes...
-                    </li>
-                    <li class="list-group-item">
-                        <strong>Niraj Kumar</strong> (54545454454 yrs): I'm a great Scientist in this universes
-                    </li>
-                    <li class="list-group-item">
-                        <strong>Niraj Kumar</strong> (54545454454 yrs): I'm Niex_45
-                    </li>
-                    <li class="list-group-item">
-                        <strong>Vinay Kumar Ram</strong> (45000 yrs): I'm only one son of my father
-                    </li>
+                <ul class="list-group mt-3 submission-list">
+                    <li class="list-group-item"><strong>Subh Kumar</strong> (24 yrs): I am a great Scientist in all Universes...</li>
+                    <li class="list-group-item"><strong>Niraj Kumar</strong> (54545454454 yrs): I'm a great Scientist in this universes</li>
+                    <li class="list-group-item"><strong>Niraj Kumar</strong> (54545454454 yrs): I'm Niex_45</li>
+                    <li class="list-group-item"><strong>Vinay Kumar Ram</strong> (45000 yrs): I'm only one son of my father</li>
                 </ul>
             </div>
         </div>
@@ -163,9 +187,7 @@
 <div class="toast-container">
     <div class="toast align-items-center text-white bg-success border-0" id="submitToast" role="alert">
         <div class="d-flex">
-            <div class="toast-body">
-                ✅ Form submitted successfully!
-            </div>
+            <div class="toast-body">✅ Form submitted successfully!</div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
@@ -173,7 +195,6 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
     function liveGreet() {
         const name = document.getElementById("name").value.trim();
@@ -181,7 +202,7 @@
         if (name) {
             greetArea.textContent = "👋 Hello, " + name + "!";
             greetArea.classList.remove('greeting');
-            void greetArea.offsetWidth; // reflow to reset animation
+            void greetArea.offsetWidth;
             greetArea.classList.add('greeting');
         } else {
             greetArea.textContent = "";
@@ -197,9 +218,26 @@
 
     function toggleTheme() {
         const html = document.documentElement;
+        const icon = document.getElementById("themeIcon");
         const current = html.getAttribute("data-bs-theme");
-        html.setAttribute("data-bs-theme", current === "dark" ? "light" : "dark");
+        if (current === "dark") {
+            html.setAttribute("data-bs-theme", "light");
+            icon.classList.replace("bi-sun-fill", "bi-moon-stars-fill");
+        } else {
+            html.setAttribute("data-bs-theme", "dark");
+            icon.classList.replace("bi-moon-stars-fill", "bi-sun-fill");
+        }
     }
+
+    function updateClockDate() {
+        const now = new Date();
+        document.getElementById("currentTime").textContent = now.toLocaleTimeString();
+        document.getElementById("currentDate").textContent = now.toLocaleDateString(undefined, {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+    }
+    setInterval(updateClockDate, 1000);
+    updateClockDate();
 </script>
 </body>
 </html>
